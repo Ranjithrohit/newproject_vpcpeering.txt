@@ -1,0 +1,234 @@
+
+			VPC PEERING
+
+- In between the two VPC(of different regions) make bridge connection is called VPC peerinG
+- transit communication (connection between two only)
+
+Types of vpc peering:
+
+1. Local regional vpc peering with same account:
+ > within the region between the multiple vpc's
+   we are planning to establish bridge connection
+
+2 . Global vpc peering connection with same account:
+
+   >In between the multiple vpc's across the region like mumbai and virginia establishing bridge connection
+
+In b/W the multiple account we want to establish bridge communication
+
+3. VPC peering across the multiple accounts with in the same region (mumbai to mumbai )
+
+4. vpc peering across the multiple account across the different regions (mumbai to virgina)
+
+-----------------------------------------------
+
+Conditions to make vpc peering :
+
+1. The CIDR(classless Inter Domain Routing)
+   - ip address should not be same
+     ex : 10.0.0.0/16
+
+
+
+-----------------------------------
+
+VPC > two vpc's present
+we establish a connection bridge program b/w two vpc
+
+- peering connection >       	newdatacenter_to_default_vpc_regionalpeering
+
+newdatacenter - local VPC
+my account
+VPC ID - default vpc
+create peering connection
+go to peering connections
+select and actions > accept request
+
+------------------------------
+
+open duplicate right click on vpc tab
+
+create peering connection
+
+peering connections
+nvirginatomumbaidefaultvpc
+default vpc
+my account
+Another region
+asia pacific(mumbai) (ap-south-1)
+copy vpc id from default_vpc in mumbai region
+create peering connection
+here we get error because cidr has same ip
+
+--------------------------------------
+>create another peering connection
+n.virginatomumbainewdatacenter
+default virgina vpc
+my account
+asia pacific(mumbai) (ap-south-1)
+copy vpc id from newdatacenter in mumbai region
+create peering connection
+actions > accept request
+
+In mumbai > peering connections
+default name change to
+mumbai_to_nvirgina_globalpeering
+
+---------------------------------
+
+In regional peering we create 2 servers for different vpc and establish a connection
+
+1- create one instance in default vpc
+2 - second instance we create in newdatacenter
+copy default_vpc id and check subnets and route tables
+
+1st step:
+Open ec2 for default_vpc to create instance
+
+name - defaultvpcserver
+windows -2016 base
+t2.micro
+create key pair
+defaultvpcserver
+edit network settings
+select default
+ap-south-1a
+enable
+launch instance
+
+2nd step :
+
+Open ec2 for newdatacenter to create instance
+
+name - newdatacenterserver
+windows -2016 base
+t2.micro
+create key pair
+newdatacenterserver
+edit network settings
+select newdatacenter
+public subnet ap-south-1a
+enable
+launch instance
+
+Get windows password for defaultvpcserver
+Get windows password for newdatacenterserver
+
+login to default vpc > copy ipv4
+remote desktop connection
+
+copy newdatacenter private ipv4
+In remote desk open another remote desk
+paste private ip from newdatacenter
+we get error
+
+---------------------------------
+
+Because of route table peering connection error
+
+open peering connection
+copy newdatacenter id
+route table > newdatacenterroutetable
+edit routes
+copy defaultid from voc ipv4
+paste it
+target - peering connection
+newdatacentertodefaultvpc
+save changes
+
+requester cidr - 10.0.0.0/16
+accepter cidr - 172.31.0.0/16
+
+
+same process with default_vpc
+
+In remote desk open another remote desk
+paste private ip from newdatacenter
+
+-------------------------------------
+
+4th method 
+
+- vpc across multiple accounts different regions
+
+my account 
+myvpc
+newdatacenter - mumbairegion
+peering connection
+create new connection
+crossaccount_mumbai_to_nvirgina - name
+vpc newdatacenter
+CIDR - 10.0.0.0/16
+Another account
+id number sandeep
+Another region - nvirgina
+copy vpc id from sandeep
+create peering connection
+
+sandeep vpc
+vpc_VD - N.virgina -172.31.0.0/16
+
+open peering connection
+actions
+accept request
+
+----------------------------------
+
+copy CIDR from crossaccout_m_to_nv
+10.0.0.0/16
+open sandeep account
+route tables > id
+edit routes
+paste CIDR
+peering connection
+save changes
+
+copy accepter CIDR - 172.31.0.0/16
+newdatacenterroute_routetable
+open route tables >id
+edit routes
+paste cidr
+peering connection
+cross account
+save changes
+change peering delete and change
+we get error
+
+same method with another vpc
+newdatacenterprivatesubnet
+
+-------------------------------
+
+sandeep account
+
+ec2 -create new instance
+n.virgina region
+
+sandeepserver
+windows
+2016 base
+t2.micro
+create key pair 
+sandeepkeyserver
+edit network
+default
+subnet - no preference
+launch instance
+
+open remote desktop in newdatcenter
+ec2 ipv4
+65.0.204.7
+
+sandeep account
+create get password windows
+
+open in remote desktop nd remote desktop
+copy private ipv4 - sandeepserver
+
+
+
+
+
+
+
+
